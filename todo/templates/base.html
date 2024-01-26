@@ -23,10 +23,13 @@
 
         <hr>
 
+        <!-- CONCEPT 3: HTML Control Flow -->
         {% for todo in todo_list %}
         <div class="ui segment">
+            <!-- CONCEPT 1: Polyglotism -->
             <p class="ui big header">{{todo.id }} | {{ todo.title }}</p>
 
+            <!-- CONCEPT 3: HTML Control Flow -->
             {% if todo.complete == False %}
             <span class="ui gray label">Not Complete</span>
             {% else %}

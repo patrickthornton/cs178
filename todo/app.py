@@ -15,14 +15,17 @@ class Todo(db.Model):
     complete = db.Column(db.Boolean)
 
 
+# CONCEPT 2: Routes
 @app.route("/")
 def home():
     print("hi")
     select_query = db.select(Todo)
     todo_list = db.session.scalars(select_query).all()
+    # CONCEPT 1: Polyglotism
     return render_template("base.html", todo_list=todo_list)
 
 
+# CONCEPT 2: Routes
 @app.route("/add", methods=["POST"])
 def add():
     title = request.form.get("title")
@@ -35,6 +38,7 @@ def add():
     return redirect(url_for("home"))
 
 
+# CONCEPT 2: Routes
 @app.route("/update/<int:todo_id>")
 def update(todo_id):
     select_query = db.select(Todo).where(Todo.id == todo_id)
@@ -44,6 +48,7 @@ def update(todo_id):
     return redirect(url_for("home"))
 
 
+# CONCEPT 2: Routes
 @app.route("/delete/<int:todo_id>")
 def delete(todo_id):
     delete_query = db.delete(Todo).where(Todo.id == todo_id)
