@@ -17,22 +17,28 @@ class Todo(db.Model):
 
 @app.route("/")
 def home():
-    todo_list = Todo.query.all()
+    print("hi")
+    select_query = db.select(Todo)
+    todo_list = db.session.scalars(select_query).all()
     return render_template("base.html", todo_list=todo_list)
 
 
 @app.route("/add", methods=["POST"])
 def add():
     title = request.form.get("title")
-    new_todo = Todo(title=title, complete=False)
-    db.session.add(new_todo)
+    insert_query = db.insert(Todo)
+    db_todo = {}
+    db_todo["title"] = title
+    db_todo["complete"] = False
+    db.session.execute(insert_query, db_todo)
     db.session.commit()
     return redirect(url_for("home"))
 
 
 @app.route("/update/<int:todo_id>")
 def update(todo_id):
-    todo = Todo.query.filter_by(id=todo_id).first()
+    select_query = db.select(Todo).where(Todo.id == todo_id)
+    todo = db.session.scalars(select_query).first()
     todo.complete = not todo.complete
     db.session.commit()
     return redirect(url_for("home"))
@@ -40,8 +46,8 @@ def update(todo_id):
 
 @app.route("/delete/<int:todo_id>")
 def delete(todo_id):
-    todo = Todo.query.filter_by(id=todo_id).first()
-    db.session.delete(todo)
+    delete_query = db.delete(Todo).where(Todo.id == todo_id)
+    db.session.execute(delete_query)
     db.session.commit()
     return redirect(url_for("home"))
 
@@ -49,4 +55,4 @@ def delete(todo_id):
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
-    app.run(debug=True)
+    app.run(port=8000, debug=True)
